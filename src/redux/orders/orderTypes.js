@@ -1,0 +1,7 @@
+const orderTypes = {
+  ORDER_APPROVED: "ORDER_APPROVED",
+  ORDER_MISSING: "ORDER_MISSING",
+  ORDER_MISSING_URGENT: "ORDER_MISSING_URGENT",
+};
+
+export default orderTypes;
