@@ -15,3 +15,7 @@ export const missingOrderUrgent = (id) => {
 export const changeProductDetails = (data) => {
   return { type: orderTypes.ORDER_DETAILS_CHANGE, payload: data };
 };
+
+export const setProductDetails = (data) => {
+  return { type: orderTypes.SET_ORDER_DETAILS, payload: data };
+};

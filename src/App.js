@@ -1,20 +1,27 @@
-import { useState } from 'react';
-import Header from './components/Header/Header';
-import OrderPage from './components/OrderPage/OrderPage';
-import MissingPopup from './components/MissingPopup/MissingPopup';
+import { useEffect } from "react";
+import Header from "./components/Header/Header";
+import OrderPage from "./components/OrderPage/OrderPage";
 
+import { connect } from "react-redux";
+import ordersList from "../src/redux/orders/dummyOrderData";
+import { setProductDetails } from "./redux/orders/orderActions";
 
-import './App.css';
+import "./App.css";
 
-function App() {
-  const [openPopup, setOpenPopup] = useState(false)
+function App({ setProducts }) {
+  useEffect(() => {
+    setProducts(ordersList);
+  }, []);
   return (
     <div className="App">
       <Header />
       <OrderPage />
-      {openPopup && <MissingPopup />}
     </div>
   );
 }
 
-export default App;
+const mapDispatchToProps = (dispatch) => ({
+  setProducts: (data) => dispatch(setProductDetails(data)),
+});
+
+export default connect(null, mapDispatchToProps)(App);

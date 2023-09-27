@@ -1,9 +1,8 @@
 import orderTypes from "./orderTypes";
 import { ORDERSTATUS } from "../../utils/orderStatus";
-import ordersList from "./dummyOrderData";
 
 const INITIALSTATE = {
-  orderDetails: [...ordersList],
+  orderDetails: [],
 };
 
 const changeOrderStatus = (orderDetails, id, status) => {
@@ -68,6 +67,13 @@ const orderReducer = (state = INITIALSTATE, action) => {
       return {
         ...state,
         orderDetails: changeOrderDetails(state.orderDetails, action.payload),
+      };
+    }
+
+    case orderTypes.SET_ORDER_DETAILS: {
+      return {
+        state,
+        orderDetails: action.payload,
       };
     }
 
