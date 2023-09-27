@@ -5,6 +5,22 @@
   border-bottom: 2px solid #9e9e9e;
   min-width: 115rem;
 
+  textarea {
+    width: calc(115rem / 4);
+    border: 2px solid #dfdfdf;
+    border-radius: 1.8rem;
+    outline: none;
+    text-decoration: none;
+    list-style: none;
+    padding: 1rem;
+    font-size: 1.2rem;
+    resize: none;
+
+    &::-webkit-scrollbar {
+      display: none;
+    }
+  }
+
   .image__container {
     width: 80px;
     height: 80px;
@@ -58,13 +74,24 @@
       gap: 2rem;
       background-color: #f2f2f2;
 
-      .approved {
+      .info {
         color: #f2f2f2;
-        background-color: rgb(9, 168, 9);
         padding: 0.8rem 1.6rem;
         border-radius: 2rem;
         margin-left: 4rem;
         margin-right: auto;
+      }
+
+      .approved {
+        background-color: rgb(9, 168, 9);
+      }
+
+      .missing {
+        background-color: orange;
+      }
+
+      .missing__urgent {
+        background-color: red;
       }
 
       button {

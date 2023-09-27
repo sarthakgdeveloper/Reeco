@@ -4,23 +4,43 @@ import { connect } from "react-redux";
 import { createStructuredSelector } from "reselect";
 import { getOrdersIdList } from "../../redux/orders/orderSelector";
 
-import EachOrder from "../EachOrder/EachOrder";
 import MissingPopup from "../MissingPopup/MissingPopup";
 
 import { TiShoppingCart } from "react-icons/ti";
 import { MdPrint, MdSearch } from "react-icons/md";
 
 import styles from "./orderpage.module.scss";
+import OrdersTable from "../OrdersTable/OrdersTable";
+import EditOrder from "../EditOrder/EditOrder";
+
+const POPUPTYPES = {
+  MISSING_POPUP: "MISSING_POPUP",
+  EDITORDER_POPUP: "EDITORDER_POPUP",
+};
 
 function OrderPage({ ordersIdList }) {
   const [openPopup, setOpenPopup] = useState(false);
-  const handleOpenPopup = (id, shouldClose = false) => {
-    if (shouldClose) {
-      setOpenPopup(false);
-      return;
-    }
-    if (typeof id !== "number") return;
-    setOpenPopup(id);
+  const handleOpenMissingPopup = () => {
+    let type = POPUPTYPES.MISSING_POPUP;
+    return (id, shouldClose = false) => {
+      if (shouldClose) {
+        setOpenPopup(false);
+        return;
+      }
+      if (typeof id !== "number") return;
+      setOpenPopup({ id, type });
+    };
+  };
+  const handleOpenEditPopup = () => {
+    let type = POPUPTYPES.EDITORDER_POPUP;
+    return (id, shouldClose = false) => {
+      if (shouldClose) {
+        setOpenPopup(false);
+        return;
+      }
+      if (typeof id !== "number") return;
+      setOpenPopup({ id, type });
+    };
   };
   return (
     <div className={styles.order__container}>
@@ -43,14 +63,17 @@ function OrderPage({ ordersIdList }) {
           <h3>Supplier</h3>
           <p>East coast fruits & vegetables</p>
         </div>
+        <div className={styles.line}></div>
         <div className={styles.suborder__details}>
           <h3>Shipping date</h3>
           <p>Thu, Feb 10</p>
         </div>
+        <div className={styles.line}></div>
         <div className={styles.suborder__details}>
           <h3>Total</h3>
           <p>$ 15,028.3</p>
         </div>
+        <div className={styles.line}></div>
         <div className={styles.suborder__details}>
           <h3>Category</h3>
           <div className={styles.category}>
@@ -64,10 +87,12 @@ function OrderPage({ ordersIdList }) {
             <TiShoppingCart style={{ fontSize: "2rem" }} color="#777" />
           </div>
         </div>
+        <div className={styles.line}></div>
         <div className={styles.suborder__details}>
           <h3>Department</h3>
           <p>300-444-678</p>
         </div>
+        <div className={styles.line}></div>
         <div className={styles.suborder__details}>
           <h3>Status</h3>
           <p>Awaiting your approvel</p>
@@ -97,39 +122,23 @@ function OrderPage({ ordersIdList }) {
             />
           </div>
         </div>
-        <div className={styles.orders__list}>
-          <div className={styles.order__listhead}>
-            <div>
-              <p>Product name</p>
-            </div>
-            <div>
-              <p>Brand</p>
-            </div>
-            <div>
-              <p>Price</p>
-            </div>
-            <div>
-              <p>Quantity</p>
-            </div>
-            <div>
-              <p>Total</p>
-            </div>
-            <div>
-              <p>Status</p>
-            </div>
-          </div>
-          {ordersIdList?.length > 0 &&
-            ordersIdList.map((id, index) => (
-              <EachOrder
-                id={id}
-                key={`${id}_${index}`}
-                handleOpenPopup={handleOpenPopup}
-              />
-            ))}
-        </div>
+        <OrdersTable
+          ordersId={ordersIdList}
+          handleOpenMissingPopup={handleOpenMissingPopup()}
+          handleOpenEditOrderPopup={handleOpenEditPopup()}
+        />
       </div>
-      {openPopup && (
-        <MissingPopup id={openPopup} handleOpenPopup={handleOpenPopup} />
+      {openPopup.type === POPUPTYPES.MISSING_POPUP && (
+        <MissingPopup
+          id={openPopup.id}
+          handleOpenPopup={handleOpenMissingPopup()}
+        />
+      )}
+      {openPopup.type === POPUPTYPES.EDITORDER_POPUP && (
+        <EditOrder
+          id={openPopup.id}
+          handleOpenEditOrderPopup={handleOpenEditPopup()}
+        />
       )}
     </div>
   );

@@ -6,35 +6,29 @@ const INITIALSTATE = {
   orderDetails: [...ordersList],
 };
 
-const approveOrder = (orderDetails, id) => {
+const changeOrderStatus = (orderDetails, id, status) => {
   if (typeof id !== "number") return [...orderDetails];
   const productIndex = orderDetails.findIndex(
     (eachProduct) => eachProduct.id === id
   );
   if (productIndex !== -1) {
-    orderDetails[productIndex].status = ORDERSTATUS.APPROVED;
+    orderDetails[productIndex].status = status;
   }
   return [...orderDetails];
 };
 
-const missingOrder = (orderDetails, id) => {
+const changeOrderDetails = (orderDetails, { id, ...data }) => {
   if (typeof id !== "number") return [...orderDetails];
   const productIndex = orderDetails.findIndex(
     (eachProduct) => eachProduct.id === id
   );
   if (productIndex !== -1) {
-    orderDetails[productIndex].status = ORDERSTATUS.MISSING;
-  }
-  return orderDetails;
-};
-
-const missingOrderUrgent = (orderDetails, id) => {
-  if (typeof id !== "number") return [...orderDetails];
-  const productIndex = orderDetails.findIndex(
-    (eachProduct) => eachProduct.id === id
-  );
-  if (productIndex !== -1) {
-    orderDetails[productIndex].status = ORDERSTATUS.MISSING_URGENT;
+    let keys = Object.keys(data);
+    keys.forEach((key) => {
+      if (data[key]) {
+        orderDetails[productIndex][key] = data[key];
+      }
+    });
   }
   return [...orderDetails];
 };
@@ -44,20 +38,38 @@ const orderReducer = (state = INITIALSTATE, action) => {
     case orderTypes.ORDER_APPROVED:
       return {
         ...state,
-        orderDetails: approveOrder(state.orderDetails, action.payload),
+        orderDetails: changeOrderStatus(
+          state.orderDetails,
+          action.payload,
+          ORDERSTATUS.APPROVED
+        ),
       };
 
     case orderTypes.ORDER_MISSING:
       return {
         ...state,
-        orderDetails: missingOrder(state.orderDetails, action.payload),
+        orderDetails: changeOrderStatus(
+          state.orderDetails,
+          action.payload,
+          ORDERSTATUS.MISSING
+        ),
       };
 
     case orderTypes.ORDER_MISSING_URGENT:
       return {
         ...state,
-        orderDetails: missingOrderUrgent(state.orderDetails, action.payload),
+        orderDetails: changeOrderStatus(
+          state.orderDetails,
+          action.payload,
+          ORDERSTATUS.MISSING_URGENT
+        ),
       };
+    case orderTypes.ORDER_DETAILS_CHANGE: {
+      return {
+        ...state,
+        orderDetails: changeOrderDetails(state.orderDetails, action.payload),
+      };
+    }
 
     default:
       return {

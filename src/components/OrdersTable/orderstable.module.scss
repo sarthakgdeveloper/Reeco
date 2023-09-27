@@ -1,0 +1,46 @@
+.orders__list {
+  margin-top: 2rem;
+  border-radius: 1rem;
+  width: 100%;
+  border: 1px solid #dfdfdf;
+  border-left: none;
+  border-right: none;
+  height: fit-content;
+  overflow: auto;
+
+  .order__listhead {
+    display: flex;
+    gap: 1rem;
+    height: 3rem;
+    border: 1px solid #dfdfdf;
+    border-top: none;
+    align-items: center;
+    min-width: 115rem;
+
+    div {
+      display: flex;
+      align-items: center;
+      flex: 1;
+
+      &:first-child {
+        justify-content: center;
+        flex: 3;
+      }
+
+      &:last-child {
+        flex: 3;
+        justify-content: flex-start;
+        position: relative;
+
+        p {
+          position: absolute;
+          left: 1.6rem;
+        }
+      }
+
+      p {
+        color: #777;
+      }
+    }
+  }
+}

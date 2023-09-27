@@ -1,4 +1,6 @@
-import React, { useEffect } from "react";
+import React from "react";
+
+import Modal from "../Modal/Modal";
 
 import { connect } from "react-redux";
 import { selectOrderById } from "../../redux/orders/orderSelector";
@@ -18,24 +20,17 @@ function MissingPopup({
   missingUrgentOrderById,
   handleOpenPopup,
 }) {
-  useEffect(() => {
-    document.getElementsByTagName("BODY")[0].style.overflow = "hidden";
-
-    return () => {
-      document.getElementsByTagName("BODY")[0].style.overflow = "auto";
-    };
-  }, []);
+  const truncatedProductName = order
+    ? order.productName?.length > 31
+      ? `${order.productName.slice(0, 32)} ...`
+      : order.productName
+    : "";
   return order ? (
-    <div
-      className={styles.missingpopup_container}
-      onClick={() => handleOpenPopup(id, true)}
+    <Modal
+      onClose={() => handleOpenPopup(id, true)}
+      innerContainerStyle={{ padding: "2rem 6rem" }}
     >
-      <div
-        className={styles.missingpopup_innercontainer}
-        onClick={(e) => {
-          e.stopPropagation();
-        }}
-      >
+      <div className={styles.missingpopup__container}>
         <div className={styles.title}>
           <h3>Missing Product</h3>
           <MdClose
@@ -45,7 +40,9 @@ function MissingPopup({
             onClick={() => handleOpenPopup(id, true)}
           />
         </div>
-        <p>is '{order.productName}' urgent?</p>
+        <div className={styles.product__name}>
+          <p>is '{truncatedProductName}' urgent?</p>
+        </div>
         <div className={styles.btn__container}>
           <button
             onClick={() => {
@@ -65,7 +62,7 @@ function MissingPopup({
           </button>
         </div>
       </div>
-    </div>
+    </Modal>
   ) : null;
 }
 
